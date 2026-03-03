@@ -8,6 +8,9 @@ This is a comprehensive Teaching Practice (TP) Assessment System built on Yii2 f
 
 ### 1. **User Access & Security**
 - Role-based access control (RBAC) with 4 user roles:
+
+> **Note:** before logging in you must have a database named `trials` with the TP tables in it.  Run the provided SQL script (`create_tp_tables.sql`) or execute the migrations (see Installation & Setup) to avoid the "table does not exist" error.
+
   - **Supervisors/Lecturers**: Create and submit assessments
   - **Zone Coordinators**: Review and validate assessments
   - **TP Office**: Manage records and generate reports

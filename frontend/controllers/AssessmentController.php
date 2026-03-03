@@ -73,25 +73,18 @@ class AssessmentController extends Controller
             } else {
                 $result = $model->saveAssessment($lecturer->id);
                 if ($result) {
-                Yii::$app->session->setFlash('success', 'Assessment saved successfully.');
-                return $this->redirect(['view', 'id' => $result->id]);
-            } else {
-                // capture and display validation errors
-                $errors = [];
-                foreach ($model->getErrors() as $attr => $msgs) {
-                    foreach ($msgs as $msg) {
-                        $errors[] = "{$attr}: {$msg}";
+                    Yii::$app->session->setFlash('success', 'Assessment saved successfully.');
+                    return $this->redirect(['view', 'id' => $result->id]);
+                } else {
+                    // capture and display validation errors
+                    $errors = [];
+                    foreach ($model->getErrors() as $attr => $msgs) {
+                        foreach ($msgs as $msg) {
+                            $errors[] = "{$attr}: {$msg}";
+                        }
                     }
+                    Yii::$app->session->setFlash('error', 'Failed to save assessment: ' . implode('; ', $errors));
                 }
-                Yii::$app->session->setFlash('error', 'Failed to save assessment: ' . implode('; ', $errors));
-            }
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-            'students' => $students,
-            'rubricAreas' => $rubricAreas,
-        ]);
     }
 
     /**
@@ -112,7 +105,10 @@ class AssessmentController extends Controller
         $rubricAreas = TpRubricArea::find()->all();
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->saveAssessment(Yii::$app->user->id)) {
+            // use lecturer id for update as well
+            $lecturer = TpLecturer::findOne(['user_id' => Yii::$app->user->id]);
+            $lecturerId = $lecturer ? $lecturer->id : null;
+            if ($model->saveAssessment($lecturerId)) {
                 Yii::$app->session->setFlash('success', 'Assessment updated successfully.');
                 return $this->redirect(['view', 'id' => $assessment->id]);
             } else {

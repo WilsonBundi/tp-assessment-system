@@ -1,7 +1,6 @@
 <?php
 
 use yii\db\Migration;
-use Yii;
 
 /**
  * Sets up RBAC authorization items for TP Assessment System.

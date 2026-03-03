@@ -24,6 +24,8 @@ use yii\db\ActiveRecord;
  * @property string|null $submitted_at
  * @property string|null $created_at
  * @property string|null $updated_at
+ *
+ * @property TpSupportingImage[] $supportingImages
  */
 class TpAssessment extends ActiveRecord
 {
@@ -138,11 +140,22 @@ class TpAssessment extends ActiveRecord
     }
 
     /**
-     * Get supporting images
+     * Get supporting images (alias for images)
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSupportingImages()
+    {
+        return $this->hasMany(TpSupportingImage::class, ['assessment_id' => 'id']);
+    }
+
+    /**
+     * @deprecated use getSupportingImages() instead. This method remains for
+     * backward compatibility and will be removed in a future release.
      */
     public function getImages()
     {
-        return $this->hasMany(TpSupportingImage::class, ['assessment_id' => 'id']);
+        return $this->getSupportingImages();
     }
 
     /**

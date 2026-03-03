@@ -56,13 +56,13 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
+     * Displays homepage / dashboard.
      *
      * @return string
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('dashboard');
     }
 
     /**

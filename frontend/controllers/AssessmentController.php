@@ -85,6 +85,14 @@ class AssessmentController extends Controller
                     }
                     Yii::$app->session->setFlash('error', 'Failed to save assessment: ' . implode('; ', $errors));
                 }
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'students' => $students,
+            'rubricAreas' => $rubricAreas,
+        ]);
     }
 
     /**

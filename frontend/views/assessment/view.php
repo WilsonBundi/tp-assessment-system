@@ -143,7 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <p>
                         <strong>Supervisor:</strong><br/>
-                        <?= $assessment->supervisor->name ?> (<?= $assessment->supervisor->tp_assigned_code ?>)
+                        <?= $assessment->supervisor ? Html::encode($assessment->supervisor->name) . ' (' . Html::encode($assessment->supervisor->tp_assigned_code) . ')' : 'N/A' ?>
                     </p>
 
                     <p>

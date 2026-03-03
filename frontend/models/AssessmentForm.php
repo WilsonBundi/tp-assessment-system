@@ -96,13 +96,18 @@ class AssessmentForm extends Model
                 }
             }
             $assessment->student_id = $student->id;
+            // remember id for later use (zone assignment and potential re-use)
+            $this->student_id = $student->id;
         }
         $assessment->supervisor_id = $supervisorId;
         $assessment->assessment_date = $this->assessment_date;
         $assessment->supervisor_remarks = $this->supervisor_remarks;
         
-        $student = TpStudent::findOne($this->student_id);
-        $assessment->zone_id = $student->zone;
+        // determine zone from the saved student record (in case id was set above)
+        $stu = TpStudent::findOne($assessment->student_id);
+        if ($stu) {
+            $assessment->zone_id = $stu->zone;
+        }
 
         if (!$assessment->save()) {
             $this->addError('general', 'Failed to save assessment');

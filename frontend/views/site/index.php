@@ -19,6 +19,10 @@ $this->title = 'Teaching Practice Assessment System';
                 </p>
             <?php else: ?>
                 <p class="fs-6">Welcome back, <?= Html::encode(Yii::$app->user->identity->username) ?>!</p>
+                <p>
+                    <?= Html::a('Create Assessment', ['/assessment/create'], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('My Assessments', ['/assessment/index'], ['class' => 'btn btn-info']) ?>
+                </p>
             <?php endif; ?>
         </div>
     </div>

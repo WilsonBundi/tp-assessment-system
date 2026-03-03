@@ -40,7 +40,10 @@ class AssessmentController extends Controller
      */
     public function actionIndex()
     {
-        $query = TpAssessment::find()->where(['supervisor_id' => Yii::$app->user->id]);
+        // determine current lecturer record for the logged in user
+        $lecturer = TpLecturer::findOne(['user_id' => Yii::$app->user->id]);
+        $lecturerId = $lecturer ? $lecturer->id : null;
+        $query = TpAssessment::find()->where(['supervisor_id' => $lecturerId]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -63,10 +66,24 @@ class AssessmentController extends Controller
         $rubricAreas = TpRubricArea::find()->all();
 
         if ($model->load(Yii::$app->request->post())) {
-            $result = $model->saveAssessment(Yii::$app->user->id);
-            if ($result) {
+            // supervisor must be the TpLecturer record linked to current user
+            $lecturer = TpLecturer::findOne(['user_id' => Yii::$app->user->id]);
+            if (!$lecturer) {
+                Yii::$app->session->setFlash('error', 'No lecturer profile found for you.');
+            } else {
+                $result = $model->saveAssessment($lecturer->id);
+                if ($result) {
                 Yii::$app->session->setFlash('success', 'Assessment saved successfully.');
                 return $this->redirect(['view', 'id' => $result->id]);
+            } else {
+                // capture and display validation errors
+                $errors = [];
+                foreach ($model->getErrors() as $attr => $msgs) {
+                    foreach ($msgs as $msg) {
+                        $errors[] = "{$attr}: {$msg}";
+                    }
+                }
+                Yii::$app->session->setFlash('error', 'Failed to save assessment: ' . implode('; ', $errors));
             }
         }
 
@@ -83,7 +100,9 @@ class AssessmentController extends Controller
     public function actionEdit($id)
     {
         $assessment = $this->findModel($id);
-        if ($assessment->supervisor_id !== Yii::$app->user->id || $assessment->status !== 'draft') {
+        $lecturer = TpLecturer::findOne(['user_id' => Yii::$app->user->id]);
+        $lecturerId = $lecturer ? $lecturer->id : null;
+        if ($assessment->supervisor_id !== $lecturerId || $assessment->status !== 'draft') {
             throw new NotFoundHttpException('You are not allowed to edit this assessment.');
         }
 
@@ -96,6 +115,14 @@ class AssessmentController extends Controller
             if ($model->saveAssessment(Yii::$app->user->id)) {
                 Yii::$app->session->setFlash('success', 'Assessment updated successfully.');
                 return $this->redirect(['view', 'id' => $assessment->id]);
+            } else {
+                $errors = [];
+                foreach ($model->getErrors() as $attr => $msgs) {
+                    foreach ($msgs as $msg) {
+                        $errors[] = "{$attr}: {$msg}";
+                    }
+                }
+                Yii::$app->session->setFlash('error', 'Failed to update: ' . implode('; ', $errors));
             }
         }
 
@@ -112,7 +139,10 @@ class AssessmentController extends Controller
     public function actionView($id)
     {
         $assessment = $this->findModel($id);
-        if ($assessment->supervisor_id !== Yii::$app->user->id) {
+        // ensure the assessment belongs to the current lecturer
+        $lecturer = TpLecturer::findOne(['user_id' => Yii::$app->user->id]);
+        $lecturerId = $lecturer ? $lecturer->id : null;
+        if ($assessment->supervisor_id !== $lecturerId) {
             throw new NotFoundHttpException('Assessment not found');
         }
 

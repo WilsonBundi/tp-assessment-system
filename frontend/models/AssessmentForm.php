@@ -18,6 +18,7 @@ class AssessmentForm extends Model
 {
     public $id;
     public $student_id;
+    public $student_input; // allow typing registration number or name
     public $assessment_date;
     public $supervisor_remarks;
     public $supervising_files;
@@ -30,9 +31,14 @@ class AssessmentForm extends Model
     public function rules()
     {
         return [
-            [['student_id', 'assessment_date'], 'required'],
+            [['assessment_date'], 'required'],
+            // at least one of student_id or student_input must be provided
+            ['student_input', 'required', 'when' => function($model) {
+                return empty($model->student_id);
+            }, 'whenClient' => "function (attribute, value) { return $('#assessmentform-student_id').val() == ''; }"],
             [['student_id'], 'integer'],
             [['student_id'], 'exist', 'targetClass' => TpStudent::class, 'targetAttribute' => 'id'],
+            [['student_input'], 'string'],
             [['assessment_date'], 'date', 'format' => 'php:Y-m-d'],
             [['supervisor_remarks'], 'string'],
             [['supervising_files'], 'file', 'maxFiles' => 5, 'extensions' => 'jpg,jpeg,png,pdf'],
@@ -67,7 +73,30 @@ class AssessmentForm extends Model
             ? TpAssessment::findOne($this->id)
             : new TpAssessment();
 
-        $assessment->student_id = $this->student_id;
+        // resolve student by id or typed input
+        if ($this->student_id) {
+            $assessment->student_id = $this->student_id;
+        } elseif (!empty($this->student_input)) {
+            // try to find by registration number
+            $input = trim($this->student_input);
+            $student = TpStudent::find()->where(['registration_number' => $input])->one();
+            if (!$student) {
+                // attempt parse "reg - name"
+                if (strpos($input, '-') !== false) {
+                    list($reg, $name) = array_map('trim', explode('-', $input, 2));
+                    $student = new TpStudent();
+                    $student->registration_number = $reg;
+                    $student->full_name = $name;
+                    $student->save(false);
+                } else {
+                    $student = new TpStudent();
+                    $student->registration_number = $input;
+                    $student->full_name = $input;
+                    $student->save(false);
+                }
+            }
+            $assessment->student_id = $student->id;
+        }
         $assessment->supervisor_id = $supervisorId;
         $assessment->assessment_date = $this->assessment_date;
         $assessment->supervisor_remarks = $this->supervisor_remarks;
@@ -141,6 +170,7 @@ class AssessmentForm extends Model
     {
         $this->id = $assessment->id;
         $this->student_id = $assessment->student_id;
+        $this->student_input = $assessment->student ? ($assessment->student->registration_number . ' - ' . $assessment->student->full_name) : null;
         $this->assessment_date = $assessment->assessment_date;
         $this->supervisor_remarks = $assessment->supervisor_remarks;
 

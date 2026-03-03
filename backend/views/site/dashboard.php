@@ -37,7 +37,9 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
                 </div>
                 <div class="panel-body" style="text-align: center;">
                     <h2 style="color: #f0ad4e; margin: 20px 0;"><?= $draftAssessments ?></h2>
-                    <?= Html::a('View', ['assessment/index'], ['class' => 'btn btn-sm btn-warning']) ?>
+                    <?php if ($draftAssessments > 0): ?>
+                        <?= Html::a('View & Edit', ['assessment/index'], ['class' => 'btn btn-sm btn-warning']) ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -93,11 +95,11 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
                     <h3 class="panel-title">Quick Actions</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="list-group">
-                        <?= Html::a('<i class="glyphicon glyphicon-plus"></i> Create New Assessment', ['assessment/create'], ['class' => 'list-group-item']) ?>
-                        <?= Html::a('<i class="glyphicon glyphicon-list"></i> View All Assessments', ['assessment/index'], ['class' => 'list-group-item']) ?>
-                        <?= Html::a('<i class="glyphicon glyphicon-file"></i> View Reports', ['report/index'], ['class' => 'list-group-item']) ?>
-                        <?= Html::a('<i class="glyphicon glyphicon-bell"></i> View Notifications', ['notification/index'], ['class' => 'list-group-item']) ?>
+                    <div class="btn-group-vertical" style="width: 100%;">
+                        <?= Html::a('+ Create New Assessment', ['assessment/create'], ['class' => 'btn btn-primary', 'style' => 'margin-bottom: 5px;']) ?>
+                        <?= Html::a('View All Assessments', ['assessment/index'], ['class' => 'btn btn-info', 'style' => 'margin-bottom: 5px;']) ?>
+                        <?= Html::a('View Reports', ['report/index'], ['class' => 'btn btn-warning', 'style' => 'margin-bottom: 5px;']) ?>
+                        <?= Html::a('View Notifications', ['notification/index'], ['class' => 'btn btn-secondary']) ?>
                     </div>
                 </div>
             </div>

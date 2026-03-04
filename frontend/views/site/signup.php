@@ -13,6 +13,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-signup">
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">👤 Are you a Supervisor or Lecturer?</h4>
+        <p>Supervisor accounts are not self-registered. Your account is created and provisioned by the TP office administrator.</p>
+        <hr>
+        <p class="mb-0"><strong>If you are a supervisor:</strong> Contact the TP office to request your account. You will be assigned a payroll number for login and a temporary password. Once you have these credentials, you can log in below.</p>
+    </div>
+
     <p>Please fill out the following fields to signup:</p>
 
     <div class="row">

@@ -28,71 +28,17 @@ $this->title = 'Teaching Practice Assessment System';
     </div>
 
     <div class="body-content">
-        <div class="row mb-4">
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fa fa-clipboard-list fa-3x text-primary mb-3"></i>
-                        <h2 class="card-title">12 Competence Areas</h2>
-                        <p class="card-text">Assessment covers professional records, lesson planning, content knowledge, pedagogical strategies, classroom management, and more.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fa fa-chart-bar fa-3x text-success mb-3"></i>
-                        <h2 class="card-title">Automatic Scoring</h2>
-                        <p class="card-text">Scores are automatically calculated and mapped to performance levels: Below Expectations, Approaching, Meets, or Exceeds.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fa fa-file-pdf fa-3x text-danger mb-3"></i>
-                        <h2 class="card-title">Dual Reports</h2>
-                        <p class="card-text">Generate two report versions: Student Copy (without marks) and Office Copy (with detailed scores).</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fa fa-image fa-3x text-info mb-3"></i>
-                        <h2 class="card-title">Evidence Upload</h2>
-                        <p class="card-text">Submit up to 5 supporting images as evidence (lesson plans, classroom photos, student work samples).</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fa fa-check-circle fa-3x text-warning mb-3"></i>
-                        <h2 class="card-title">Validation Workflow</h2>
-                        <p class="card-text">Assessments go through a structured workflow: Draft → Submitted → Reviewed → Validated → Final.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fa fa-bell fa-3x text-danger mb-3"></i>
-                        <h2 class="card-title">Real-time Notifications</h2>
-                        <p class="card-text">Stay updated with real-time notifications on assessment submissions, reviews, and approvals.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">Getting Started</h4>
-            <p>If you're a <strong>Student or Lecturer</strong>, please <?= Html::a('login', ['/site/login']) ?> or <?= Html::a('register', ['/site/signup']) ?> to access the assessment portal.</p>
-            <hr>
-            <p class="mb-0">For <strong>supervisors and coordinators</strong>, access the <?= Html::a('backend system', 'http://localhost:3000', ['target' => '_blank']) ?> to create and review assessments.</p>
+        <div class="px-3">
+            <h2>How Supervisors Interact with the System</h2>
+            <ol>
+                <li><strong>Accounts are created by an administrator.</strong> Supervisors do not register themselves; the TP office assigns a payroll number and temporary password.</li>
+                <li><strong>Login using payroll number.</strong> Visit the portal and sign in with the payroll number as username. Password resets are handled by admin.</li>
+                <li><strong>Create or edit assessments.</strong> Use the <em>Assessments</em> menu to add new entries or modify drafts. Select or type a student, enter scores, remarks, and upload up to five supporting images.</li>
+                <li><strong>Submit for review.</strong> Submissions go to the zone coordinator for validation. Drafts remain editable until validated.</li>
+                <li><strong>Track status.</strong> Notifications are emailed to you and the student; students do not log in and receive updates passively.</li>
+            </ol>
+            <p class="mt-3"><strong>Note:</strong> Students are passive users. They do not register or log in; their profiles are added when assessments are entered, and they simply receive email notifications.</p>
+            <p class="mt-3">Coordinators and TP office staff should use the <a href="http://localhost:3000" target="_blank">backend system</a> for review, validation, and report generation.</p>
         </div>
     </div>
 </div>

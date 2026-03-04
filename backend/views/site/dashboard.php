@@ -5,7 +5,6 @@ use common\models\TpAssessment;
 use common\models\TpNotification;
 
 $this->title = 'TP Assessment Dashboard';
-$this->params['breadcrumbs'][] = $this->title;
 
 // Get counts for dashboard
 $totalAssessments = TpAssessment::find()->count();

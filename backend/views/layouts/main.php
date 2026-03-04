@@ -66,38 +66,6 @@ AppAsset::register($this);
 
 <main role="main" class="flex-shrink-0" style="margin-top: 90px; padding: 40px 0; background-color: #F8F9FA;">
     <div class="container">
-        <style>
-            .breadcrumb {
-                background-color: transparent;
-                padding: 0 0 20px 0;
-                margin-bottom: 0;
-                font-size: 0.95rem;
-            }
-            .breadcrumb-item {
-                color: #3498DB;
-            }
-            .breadcrumb-item a {
-                color: #3498DB;
-                text-decoration: none;
-                font-weight: 500;
-            }
-            .breadcrumb-item a:hover {
-                color: #2874A6;
-                text-decoration: underline;
-            }
-            .breadcrumb-item.active {
-                color: #2C3E50;
-                font-weight: 600;
-            }
-        </style>
-        <?php
-            $breadcrumbLinks = isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [];
-            $finalLinks = [['label' => 'Home', 'url' => ['/site/index']]];
-            $finalLinks = array_merge($finalLinks, $breadcrumbLinks);
-        ?>
-        <?= Breadcrumbs::widget([
-            'links' => $finalLinks,
-        ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>

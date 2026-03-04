@@ -25,18 +25,6 @@ AppAsset::register($this);
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
-<style>
-    /* ensure breadcrumb items are separated vertically and spaced away from content */
-    .breadcrumb {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1.5rem;
-    }
-    .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
-        content: none;
-    }
-</style>
-
 <header>
     <?php
     NavBar::begin([
@@ -78,6 +66,30 @@ AppAsset::register($this);
 
 <main role="main" class="flex-shrink-0" style="margin-top: 90px; padding: 40px 0; background-color: #F8F9FA;">
     <div class="container">
+        <style>
+            .breadcrumb {
+                background-color: transparent;
+                padding: 0 0 20px 0;
+                margin-bottom: 0;
+                font-size: 0.95rem;
+            }
+            .breadcrumb-item {
+                color: #3498DB;
+            }
+            .breadcrumb-item a {
+                color: #3498DB;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .breadcrumb-item a:hover {
+                color: #2874A6;
+                text-decoration: underline;
+            }
+            .breadcrumb-item.active {
+                color: #2C3E50;
+                font-weight: 600;
+            }
+        </style>
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>

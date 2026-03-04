@@ -19,7 +19,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     background: linear-gradient(135deg, #3498DB 0%, #5DADE2 100%);
     color: white;
     padding: 40px 0;
-    margin: 60px -30px 30px -30px;
+    margin: 0 -30px 30px -30px;
     border-radius: 0;
   }
   

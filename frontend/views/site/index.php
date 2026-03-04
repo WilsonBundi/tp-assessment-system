@@ -29,10 +29,10 @@ $this->title = 'Teaching Practice Assessment System';
 
     <div class="body-content">
         <div class="px-3">
-            <h2>How Supervisors Interact with the System</h2>
+            <h2>Supervisor Account Provisioning and System Access</h2>
             <ol>
-                <li><strong>Accounts are created by an administrator.</strong> Supervisors do not register themselves; the TP office assigns a payroll number and temporary password.</li>
-                <li><strong>Login using payroll number.</strong> Visit the portal and sign in with the payroll number as username. Password resets are handled by admin.</li>
+                <li><strong>Account provisioning by administrator.</strong> Supervisor accounts are provisioned by the system administrator rather than through self-registration. The TP office assigns a payroll number as the login identifier and issues a temporary password for initial access.</li>
+                <li><strong>Authentication using payroll number.</strong> Access the portal and log in using the assigned payroll number as credentials. Password resets are managed by the administrator.</li>
                 <li><strong>Create or edit assessments.</strong> Use the <em>Assessments</em> menu to add new entries or modify drafts. Select or type a student, enter scores, remarks, and upload up to five supporting images.</li>
                 <li><strong>Submit for review.</strong> Submissions go to the zone coordinator for validation. Drafts remain editable until validated.</li>
                 <li><strong>Track status.</strong> Notifications are emailed to you and the student; students do not log in and receive updates passively.</li>

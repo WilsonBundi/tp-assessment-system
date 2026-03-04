@@ -14,12 +14,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Please fill out the following fields to login:</p>
+    <p style="color: #666; font-size: 0.95rem;">
+        <strong>Note:</strong> Supervisor accounts are provisioned by the administrator. Use your assigned payroll number and the password provided by the TP office.
+    </p>
 
     <div class="row">
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('Payroll Number') ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
@@ -32,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
                 <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('Login', ['class' => 'btn', 'style' => 'background-color: #3498DB; color: white; font-weight: 600; padding: 10px 25px;', 'name' => 'login-button']) ?>
                 </div>
 
             <?php ActiveForm::end(); ?>

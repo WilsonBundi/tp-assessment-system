@@ -24,48 +24,134 @@ $this->params['breadcrumbs'][] = $this->title;
     <div style="background: #f0f8ff; padding: 20px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #3498DB;">
         <h4 style="color: #2874A6; margin-bottom: 15px; font-weight: 700;">STUDENT-TEACHER DETAILS</h4>
         
+        <!-- Row 1: Name and Registration -->
         <div class="row">
             <div class="col-md-6">
                 <div style="margin-bottom: 15px;">
-                    <label style="font-weight: 600; color: #333;">STUDENT SELECTION:</label><br>
-                    <?php $listId = 'student-list'; ?>
-                    <?= Html::textInput('AssessmentForm[student_input]', $model->student_input, [
-                        'class' => 'form-control', 
-                        'list' => $listId, 
-                        'placeholder' => 'Type registration # or name',
-                        'style' => 'margin-top: 8px;'
-                    ]) ?>
-                    <datalist id="<?= $listId ?>">
-                        <?php foreach ($students as $student): ?>
-                            <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>
-                        <?php endforeach; ?>
-                    </datalist>
-                    <?= Html::activeHiddenInput($model, 'student_id') ?>
-                    <script>
-                    document.querySelector('[name="AssessmentForm[student_input]"]').addEventListener('input', function(e) {
-                        var val = e.target.value;
-                        var matched = false;
-                        <?php foreach ($students as $student): ?>
-                            if (val === '<?= addslashes($student->registration_number . ' - ' . $student->full_name) ?>') {
-                                document.querySelector('[name="AssessmentForm[student_id]"]').value = '<?= $student->id ?>';
-                                matched = true;
-                            }
-                        <?php endforeach; ?>
-                        if (!matched) {
-                            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-                        }
-                    });
-                    </script>
+                    <label style="font-weight: 600; color: #333;">NAME:</label><br>
+                    <input type="text" class="form-control" id="student-name" placeholder="Student name" readonly style="margin-top: 8px; background-color: #f5f5f5;">
                 </div>
             </div>
             <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">REGISTRATION NUMBER:</label><br>
+                    <input type="text" class="form-control" id="student-reg" placeholder="Student registration" readonly style="margin-top: 8px; background-color: #f5f5f5;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: School and Form/Grade -->
+        <div class="row">
+            <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">SCHOOL:</label><br>
+                    <input type="text" class="form-control" id="student-school" placeholder="TP School name" readonly style="margin-top: 8px; background-color: #f5f5f5;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">FORM/GRADE:</label><br>
+                    <input type="text" class="form-control" placeholder="Form or Grade" style="margin-top: 8px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Assessment Date and Time -->
+        <div class="row">
+            <div class="col-md-4">
                 <div style="margin-bottom: 15px;">
                     <label style="font-weight: 600; color: #333;">DATE OF ASSESSMENT:</label><br>
                     <?= $form->field($model, 'assessment_date')->input('date', ['style' => 'margin-top: 8px;'])->label(false) ?>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">TIME FROM:</label><br>
+                    <input type="time" class="form-control" placeholder="Start time" style="margin-top: 8px;">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">TIME TO:</label><br>
+                    <input type="time" class="form-control" placeholder="End time" style="margin-top: 8px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4: Learning Area, Zone -->
+        <div class="row">
+            <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">LEARNING AREA (SUBJECT):</label><br>
+                    <input type="text" class="form-control" placeholder="e.g., Mathematics, English" style="margin-top: 8px;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">ZONE:</label><br>
+                    <input type="text" class="form-control" placeholder="TP Zone" style="margin-top: 8px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 5: Strand and Sub-Strand -->
+        <div class="row">
+            <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">STRAND (TOPIC):</label><br>
+                    <input type="text" class="form-control" placeholder="Lesson topic" style="margin-top: 8px;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333;">SUB-STRAND (SUB-TOPIC):</label><br>
+                    <input type="text" class="form-control" placeholder="Sub-topic details" style="margin-top: 8px;">
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Student Selection Input -->
+    <div style="background: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 2px solid #3498DB;">
+        <h5 style="color: #2874A6; margin-bottom: 10px; font-weight: 700;">🔍 SELECT OR ADD STUDENT</h5>
+        <?php $listId = 'student-list'; ?>
+        <?= Html::textInput('AssessmentForm[student_input]', $model->student_input, [
+            'class' => 'form-control', 
+            'list' => $listId, 
+            'id' => 'student-input',
+            'placeholder' => 'Type registration number or student name (new students will be created automatically)',
+            'style' => 'padding: 10px; font-size: 1rem;'
+        ]) ?>
+        <datalist id="<?= $listId ?>">
+            <?php foreach ($students as $student): ?>
+                <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>
+            <?php endforeach; ?>
+        </datalist>
+        <?= Html::activeHiddenInput($model, 'student_id') ?>
+        <small style="color: #666; display: block; margin-top: 8px;">💡 Tip: You can type a new registration number or name to create a new student record.</small>
+    </div>
+
+    <script>
+    document.getElementById('student-input').addEventListener('input', function(e) {
+        var val = e.target.value;
+        var matched = false;
+        <?php foreach ($students as $student): ?>
+            if (val === '<?= addslashes($student->registration_number . ' - ' . $student->full_name) ?>') {
+                document.querySelector('[name="AssessmentForm[student_id]"]').value = '<?= $student->id ?>';
+                document.getElementById('student-name').value = '<?= addslashes($student->full_name) ?>';
+                document.getElementById('student-reg').value = '<?= addslashes($student->registration_number) ?>';
+                document.getElementById('student-school').value = '<?= addslashes($student->school ?? 'N/A') ?>';
+                matched = true;
+            }
+        <?php endforeach; ?>
+        if (!matched) {
+            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-reg').value = '';
+            document.getElementById('student-school').value = '';
+        }
+    });
+    </script>
 
     <!-- Rubric Assessment Section -->
     <div style="margin-bottom: 20px;">

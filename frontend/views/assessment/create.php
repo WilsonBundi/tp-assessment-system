@@ -111,22 +111,40 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <!-- Student Selection Dropdown -->
+    <!-- Student Selection Dropdown with Search -->
     <div style="background: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 2px solid #3498DB;">
         <h5 style="color: #2874A6; margin-bottom: 10px; font-weight: 700;">📋 SELECT STUDENT-TEACHER</h5>
-        <div class="row">
-            <div class="col-md-12">
-                <label style="font-weight: 600; color: #333;">Choose Student or Type to Search:</label><br>
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-md-9">
+                <label style="font-weight: 600; color: #333;">Choose from List:</label><br>
                 <select class="form-control" id="student-select" style="padding: 10px; font-size: 1rem; margin-top: 8px;">
-                    <option value="">-- Select a student or type below --</option>
+                    <option value="">-- Select a student --</option>
                     <?php foreach ($students as $student): ?>
                         <option value="<?= $student->id ?>" data-name="<?= Html::encode($student->full_name) ?>" data-reg="<?= Html::encode($student->registration_number) ?>" data-school="<?= Html::encode($student->school ?? 'N/A') ?>">
                             <?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <small style="color: #666; display: block; margin-top: 8px;">💡 Tip: You can also type a new registration number or name below to add a new student.</small>
-                <?= Html::activeHiddenInput($model, 'student_id') ?>
+            </div>
+            <div class="col-md-3">
+                <label style="font-weight: 600; color: #333;">&nbsp;</label><br>
+                <button type="button" id="search-btn" class="btn" style="width: 100%; background-color: #27ae60; color: white; font-weight: 600; padding: 10px; margin-top: 8px; border: none; border-radius: 4px; cursor: pointer;">🔍 Search</button>
+            </div>
+        </div>
+        <small style="color: #666; display: block; margin-top: 8px;">💡 You can also scroll through the dropdown or use the Search button to find students.</small>
+        <?= Html::activeHiddenInput($model, 'student_id') ?>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <h3 style="color: #2874A6; margin-bottom: 15px; font-weight: 700;">Search Students</h3>
+            <input type="text" id="search-input" class="form-control" placeholder="Enter registration number or name..." style="padding: 12px; font-size: 1rem; margin-bottom: 15px;">
+            <div id="search-results" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">
+                <p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>
+            </div>
+            <div style="margin-top: 15px; text-align: right;">
+                <button type="button" id="close-search-btn" class="btn" style="background-color: #95a5a6; color: white; font-weight: 600; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Close</button>
             </div>
         </div>
     </div>
@@ -178,6 +196,86 @@ $this->params['breadcrumbs'][] = $this->title;
             document.getElementById('student-school').value = '';
             document.getElementById('student-input').value = '';
         }
+    });
+    
+    // Handle SEARCH button
+    document.getElementById('search-btn').addEventListener('click', function() {
+        document.getElementById('search-modal').style.display = 'flex';
+        document.getElementById('search-input').focus();
+    });
+    
+    document.getElementById('close-search-btn').addEventListener('click', function() {
+        document.getElementById('search-modal').style.display = 'none';
+    });
+    
+    // Handle SEARCH functionality
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const resultsDiv = document.getElementById('search-results');
+        
+        if (query.length === 0) {
+            resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
+            return;
+        }
+        
+        const students = [
+            <?php foreach ($students as $student): ?>
+                {
+                    id: '<?= $student->id ?>',
+                    name: '<?= addslashes($student->full_name) ?>',
+                    reg: '<?= addslashes($student->registration_number) ?>',
+                    school: '<?= addslashes($student->school ?? 'N/A') ?>'
+                },
+            <?php endforeach; ?>
+        ];
+        
+        const filtered = students.filter(s => 
+            s.name.toLowerCase().includes(query) || 
+            s.reg.toLowerCase().includes(query)
+        );
+        
+        if (filtered.length === 0) {
+            resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No students found</p>';
+            return;
+        }
+        
+        let html = '';
+        filtered.forEach(student => {
+            html += `<div style="padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; transition: background 0.2s;" class="search-result-item" data-id="${student.id}" data-name="${student.name}" data-reg="${student.reg}" data-school="${student.school}">
+                <strong style="color: #2874A6;">${student.reg}</strong><br>
+                <span style="color: #333;">${student.name}</span><br>
+                <small style="color: #999;">${student.school}</small>
+            </div>`;
+        });
+        
+        resultsDiv.innerHTML = html;
+        
+        // Add click handlers to search results
+        document.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const name = this.dataset.name;
+                const reg = this.dataset.reg;
+                const school = this.dataset.school;
+                
+                document.querySelector('[name="AssessmentForm[student_id]"]').value = id;
+                document.getElementById('student-name').value = name;
+                document.getElementById('student-reg').value = reg;
+                document.getElementById('student-school').value = school;
+                document.getElementById('student-input').value = reg + ' - ' + name;
+                document.getElementById('student-select').value = id;
+                
+                document.getElementById('search-modal').style.display = 'none';
+            });
+            
+            item.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#e8f4f8';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'transparent';
+            });
+        });
     });
     
     // Handle TYPE input

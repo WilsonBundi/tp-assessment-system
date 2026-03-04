@@ -29,20 +29,29 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6">
                 <div style="margin-bottom: 15px;">
                     <label style="font-weight: 600; color: #333;">NAME:</label><br>
-                    <input type="text" class="form-control" id="student-name" placeholder="Student name" readonly style="margin-top: 8px; background-color: #f5f5f5;">
+                    <input type="text" class="form-control" id="student-name" name="student-name" list="student-name-list" placeholder="Type or select student name" required style="margin-top: 8px;">
+                    <datalist id="student-name-list">
+                        <?php foreach ($students as $student): ?>
+                            <option value="<?= Html::encode($student->full_name) ?>"></option>
+                        <?php endforeach; ?>
+                    </datalist>
                 </div>
             </div>
                     <div class="col-md-6">
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: 600; color: #333;">REGISTRATION NUMBER / SEARCH:</label><br>
                             <div style="position: relative; margin-top: 8px;">
-                                <input type="text" class="form-control" id="student-input" placeholder="Type name/reg, select dropdown, or search 🔍" style="padding-right: 45px; font-size: 1rem;">
+                                <input type="text" class="form-control" id="student-input" name="AssessmentForm[student_input]" list="student-list" placeholder="Type registration number or student name, or use search 🔍" required style="padding-right: 45px; font-size: 1rem;">
                                 <button type="button" id="search-btn-inline" class="btn" style="position: absolute; right: 2px; top: 50%; transform: translateY(-50%); background-color: #3498DB; color: white; font-weight: 600; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">🔍</button>
                                 <datalist id="student-list">
                                     <?php foreach ($students as $student): ?>
-                                        <option value="<?= $student->registration_number . ' - ' . Html::encode($student->full_name) ?>"></option>
+                                        <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>
                                     <?php endforeach; ?>
                                 </datalist>
+                                <div style="margin-top: 10px;">
+                                    <label style="font-weight: 600; color: #333;">REGISTRATION:</label>
+                                    <input type="text" id="student-reg" class="form-control" required placeholder="Registration number" readonly style="margin-top: 8px; background-color: #f5f5f5;">
+                                </div>
                                 <select class="form-control" id="student-select" style="padding: 10px; font-size: 1rem; margin-top: 8px; display: none;">
                                     <option value="">-- Select a student --</option>
                                     <?php foreach ($students as $student): ?>
@@ -61,7 +70,14 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-6">
                 <div style="margin-bottom: 15px;">
                     <label style="font-weight: 600; color: #333;">SCHOOL:</label><br>
-                    <input type="text" class="form-control" id="student-school" placeholder="TP School name" readonly style="margin-top: 8px; background-color: #f5f5f5;">
+                    <input type="text" class="form-control" id="student-school" name="student-school" list="student-school-list" placeholder="Type or select school" required style="margin-top: 8px;">
+                    <datalist id="student-school-list">
+                        <?php foreach ($students as $student): ?>
+                            <?php if (!empty($student->school)): ?>
+                                <option value="<?= Html::encode($student->school) ?>"></option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </datalist>
                 </div>
             </div>
             <div class="col-md-6">
@@ -187,6 +203,43 @@ $this->params['breadcrumbs'][] = $this->title;
                 document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
             }
         });
+
+        // Handle NAME input: exact match to student name will populate
+        document.getElementById('student-name').addEventListener('input', function(e) {
+            const val = e.target.value.trim();
+            for (let student of students) {
+                if (val === student.name) {
+                    autoPopulateStudent(student.id);
+                    return;
+                }
+            }
+            // no exact match
+            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+        });
+
+        // Handle REG input: exact match to reg or reg - name will populate
+        document.getElementById('student-reg').addEventListener('input', function(e) {
+            const val = e.target.value.trim();
+            for (let student of students) {
+                if (val === student.reg || val === (student.reg + ' - ' + student.name)) {
+                    autoPopulateStudent(student.id);
+                    return;
+                }
+            }
+            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+        });
+
+        // Handle SCHOOL input: if only one student matches this school, populate
+        document.getElementById('student-school').addEventListener('input', function(e) {
+            const val = e.target.value.trim();
+            const matches = students.filter(s => s.school === val);
+            if (matches.length === 1) {
+                autoPopulateStudent(matches[0].id);
+            } else {
+                // don't set student id when multiple or zero matches
+                document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+            }
+        });
     
         // Handle SEARCH button
         document.getElementById('search-btn-inline').addEventListener('click', function(e) {
@@ -231,7 +284,7 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         
             resultsDiv.innerHTML = html;
-        
+            
             // Add click handlers to search results
             document.querySelectorAll('.search-result-item').forEach(item => {
                 item.addEventListener('click', function() {
@@ -239,124 +292,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     autoPopulateStudent(id);
                     document.getElementById('search-modal').style.display = 'none';
                 });
-            
+                
                 item.addEventListener('mouseenter', function() {
                     this.style.backgroundColor = '#e8f4f8';
                 });
-            
+                
                 item.addEventListener('mouseleave', function() {
                     this.style.backgroundColor = 'transparent';
                 });
             });
         });
-        } else {
-            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-            document.getElementById('student-name').value = '';
-            document.getElementById('student-reg').value = '';
-            document.getElementById('student-school').value = '';
-            document.getElementById('student-input').value = '';
-        }
-    });
-    
-    // Handle SEARCH button
-    document.getElementById('search-btn').addEventListener('click', function() {
-        document.getElementById('search-modal').style.display = 'flex';
-        document.getElementById('search-input').focus();
-    });
-    
-    document.getElementById('close-search-btn').addEventListener('click', function() {
-        document.getElementById('search-modal').style.display = 'none';
-    });
-    
-    // Handle SEARCH functionality
-    document.getElementById('search-input').addEventListener('input', function(e) {
-        const query = e.target.value.toLowerCase().trim();
-        const resultsDiv = document.getElementById('search-results');
-        
-        if (query.length === 0) {
-            resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
-            return;
-        }
-        
-        const students = [
-            <?php foreach ($students as $student): ?>
-                {
-                    id: '<?= $student->id ?>',
-                    name: '<?= addslashes($student->full_name) ?>',
-                    reg: '<?= addslashes($student->registration_number) ?>',
-                    school: '<?= addslashes($student->school ?? 'N/A') ?>'
-                },
-            <?php endforeach; ?>
-        ];
-        
-        const filtered = students.filter(s => 
-            s.name.toLowerCase().includes(query) || 
-            s.reg.toLowerCase().includes(query)
-        );
-        
-        if (filtered.length === 0) {
-            resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No students found</p>';
-            return;
-        }
-        
-        let html = '';
-        filtered.forEach(student => {
-            html += `<div style="padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; transition: background 0.2s;" class="search-result-item" data-id="${student.id}" data-name="${student.name}" data-reg="${student.reg}" data-school="${student.school}">
-                <strong style="color: #2874A6;">${student.reg}</strong><br>
-                <span style="color: #333;">${student.name}</span><br>
-                <small style="color: #999;">${student.school}</small>
-            </div>`;
-        });
-        
-        resultsDiv.innerHTML = html;
-        
-        // Add click handlers to search results
-        document.querySelectorAll('.search-result-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const id = this.dataset.id;
-                const name = this.dataset.name;
-                const reg = this.dataset.reg;
-                const school = this.dataset.school;
-                
-                document.querySelector('[name="AssessmentForm[student_id]"]').value = id;
-                document.getElementById('student-name').value = name;
-                document.getElementById('student-reg').value = reg;
-                document.getElementById('student-school').value = school;
-                document.getElementById('student-input').value = reg + ' - ' + name;
-                document.getElementById('student-select').value = id;
-                
-                document.getElementById('search-modal').style.display = 'none';
-            });
-            
-            item.addEventListener('mouseenter', function() {
-                this.style.backgroundColor = '#e8f4f8';
-            });
-            
-            item.addEventListener('mouseleave', function() {
-                this.style.backgroundColor = 'transparent';
-            });
-        });
-    });
-    
-    // Handle TYPE input
-    document.getElementById('student-input').addEventListener('input', function(e) {
-        var val = e.target.value;
-        var matched = false;
-        <?php foreach ($students as $student): ?>
-            if (val === '<?= addslashes($student->registration_number . ' - ' . $student->full_name) ?>') {
-                document.querySelector('[name="AssessmentForm[student_id]"]').value = '<?= $student->id ?>';
-                document.getElementById('student-name').value = '<?= addslashes($student->full_name) ?>';
-                document.getElementById('student-reg').value = '<?= addslashes($student->registration_number) ?>';
-                document.getElementById('student-school').value = '<?= addslashes($student->school ?? 'N/A') ?>';
-                document.getElementById('student-select').value = '<?= $student->id ?>';
-                matched = true;
-            }
-        <?php endforeach; ?>
-        if (!matched) {
-            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-            document.getElementById('student-select').value = '';
-        }
-    });
     </script>
 
     <!-- Rubric Assessment Section -->

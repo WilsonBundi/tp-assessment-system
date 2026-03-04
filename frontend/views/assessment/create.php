@@ -48,10 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>
                                     <?php endforeach; ?>
                                 </datalist>
-                                <div style="margin-top: 10px;">
-                                    <label style="font-weight: 600; color: #333;">REGISTRATION:</label>
-                                    <input type="text" id="student-reg" class="form-control" required placeholder="Registration number" readonly style="margin-top: 8px; background-color: #f5f5f5;">
-                                </div>
+                                <?= Html::hiddenInput('AssessmentForm[registration]', '', ['id' => 'assessment-registration']) ?>
                                 <select class="form-control" id="student-select" style="padding: 10px; font-size: 1rem; margin-top: 8px; display: none;">
                                     <option value="">-- Select a student --</option>
                                     <?php foreach ($students as $student): ?>
@@ -301,6 +298,37 @@ $this->params['breadcrumbs'][] = $this->title;
                     this.style.backgroundColor = 'transparent';
                 });
             });
+        });
+
+        // Form submit validation: ensure name, registration, school are present
+        document.getElementById('assessment-form').addEventListener('submit', function(e) {
+            const name = document.getElementById('student-name').value.trim();
+            const input = document.getElementById('student-input').value.trim();
+            const school = document.getElementById('student-school').value.trim();
+
+            // Try parse registration from student-input if formatted as "REG - Name"
+            let registration = '';
+            if (input.includes(' - ')) {
+                registration = input.split(' - ')[0].trim();
+            }
+
+            // If student_id is set (existing student), ensure registration taken from students list
+            const studentId = document.querySelector('[name="AssessmentForm[student_id]"]').value;
+            if (studentId) {
+                const s = students.find(s => s.id == studentId);
+                if (s) registration = s.reg;
+            }
+
+            // set hidden registration
+            document.getElementById('assessment-registration').value = registration;
+
+            if (!name || !registration || !school) {
+                e.preventDefault();
+                alert('Please ensure Student Name, Registration and School are all provided.');
+                return false;
+            }
+
+            return true;
         });
     </script>
 

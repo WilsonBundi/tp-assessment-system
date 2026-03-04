@@ -31,16 +31,17 @@ AppAsset::register($this);
         'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'class' => 'navbar navbar-expand-md navbar-dark fixed-top',
+            'style' => 'background: linear-gradient(90deg, #2C3E50 0%, #3498DB 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.15);',
         ],
     ]);
     $menuItems = [
-        ['label' => 'Dashboard', 'url' => ['/site/index']],
+        ['label' => '🏠 Dashboard', 'url' => ['/site/index']],
     ];
     if (!Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Assessments', 'url' => ['/assessment/index']];
-        $menuItems[] = ['label' => 'Reports', 'url' => ['/report/index']];
-        $menuItems[] = ['label' => 'Notifications', 'url' => ['/notification/index']];
+        $menuItems[] = ['label' => '📋 Assessments', 'url' => ['/assessment/index']];
+        $menuItems[] = ['label' => '📊 Reports', 'url' => ['/report/index']];
+        $menuItems[] = ['label' => '🔔 Notifications', 'url' => ['/notification/index']];
     }
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
@@ -50,12 +51,12 @@ AppAsset::register($this);
         'items' => $menuItems,
     ]);
     if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
+        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-light login text-decoration-none fw-bold']]),['class' => ['d-flex']]);
     } else {
         echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout text-decoration-none']
+                '👤 ' . Yii::$app->user->identity->username . ' (Logout)',
+                ['class' => 'btn btn-light logout text-decoration-none fw-bold']
             )
             . Html::endForm();
     }
@@ -63,7 +64,7 @@ AppAsset::register($this);
     ?>
 </header>
 
-<main role="main" class="flex-shrink-0">
+<main role="main" class="flex-shrink-0" style="margin-top: 70px; padding: 40px 0; background-color: #F8F9FA;">
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -73,10 +74,12 @@ AppAsset::register($this);
     </div>
 </main>
 
-<footer class="footer mt-auto py-3 text-muted">
+<footer class="footer mt-auto py-4" style="background-color: #2C3E50; color: white; margin-top: 40px;">
     <div class="container">
-        <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-end"><?= Yii::powered() ?></p>
+        <p class="float-start mb-0" style="font-size: 0.9rem;">
+            &copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?> | University of Nairobi Faculty of Education
+        </p>
+        <p class="float-end mb-0" style="font-size: 0.85rem;">Teaching Practice Assessment System v1.0</p>
     </div>
 </footer>
 

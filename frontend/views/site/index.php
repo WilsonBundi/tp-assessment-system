@@ -30,7 +30,8 @@ $this->title = 'Teaching Practice Assessment System';
         </div>
     </div>
 
-    <!-- Instructions Section -->
+    <!-- Instructions Section (visible only to guests) -->
+    <?php if (Yii::$app->user->isGuest): ?>
     <div class="body-content" style="background-color: #f8f9fa; padding: 60px 20px;">
         <div class="container">
             <div style="max-width: 800px; margin: 0 auto;">
@@ -82,6 +83,7 @@ $this->title = 'Teaching Practice Assessment System';
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>
 
 <style>

@@ -111,27 +111,76 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <!-- Student Selection Input -->
+    <!-- Student Selection Dropdown -->
     <div style="background: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 2px solid #3498DB;">
-        <h5 style="color: #2874A6; margin-bottom: 10px; font-weight: 700;">🔍 SELECT OR ADD STUDENT</h5>
+        <h5 style="color: #2874A6; margin-bottom: 10px; font-weight: 700;">📋 SELECT STUDENT-TEACHER</h5>
+        <div class="row">
+            <div class="col-md-12">
+                <label style="font-weight: 600; color: #333;">Choose Student or Type to Search:</label><br>
+                <select class="form-control" id="student-select" style="padding: 10px; font-size: 1rem; margin-top: 8px;">
+                    <option value="">-- Select a student or type below --</option>
+                    <?php foreach ($students as $student): ?>
+                        <option value="<?= $student->id ?>" data-name="<?= Html::encode($student->full_name) ?>" data-reg="<?= Html::encode($student->registration_number) ?>" data-school="<?= Html::encode($student->school ?? 'N/A') ?>">
+                            <?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small style="color: #666; display: block; margin-top: 8px;">💡 Tip: You can also type a new registration number or name below to add a new student.</small>
+                <?= Html::activeHiddenInput($model, 'student_id') ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- OR - Type New Student -->
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+        <p style="color: #666; margin: 0; font-weight: 600;">OR</p>
+    </div>
+
+    <!-- Type New Student -->
+    <div style="background: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 2px solid #95a5a6;">
+        <h5 style="color: #34495e; margin-bottom: 10px; font-weight: 700;">➕ ADD NEW STUDENT</h5>
         <?php $listId = 'student-list'; ?>
+        <label style="font-weight: 600; color: #333;">Student Registration/Name:</label><br>
         <?= Html::textInput('AssessmentForm[student_input]', $model->student_input, [
             'class' => 'form-control', 
             'list' => $listId, 
             'id' => 'student-input',
-            'placeholder' => 'Type registration number or student name (new students will be created automatically)',
-            'style' => 'padding: 10px; font-size: 1rem;'
+            'placeholder' => 'Type registration number or student name',
+            'style' => 'padding: 10px; font-size: 1rem; margin-top: 8px;'
         ]) ?>
         <datalist id="<?= $listId ?>">
             <?php foreach ($students as $student): ?>
                 <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>
             <?php endforeach; ?>
         </datalist>
-        <?= Html::activeHiddenInput($model, 'student_id') ?>
-        <small style="color: #666; display: block; margin-top: 8px;">💡 Tip: You can type a new registration number or name to create a new student record.</small>
+        <small style="color: #666; display: block; margin-top: 8px;">🆕 This will create a new student record if the entry doesn't exist.</small>
     </div>
 
     <script>
+    // Handle SELECT dropdown
+    document.getElementById('student-select').addEventListener('change', function(e) {
+        const studentId = this.value;
+        if (studentId) {
+            const option = this.options[this.selectedIndex];
+            const name = option.dataset.name;
+            const reg = option.dataset.reg;
+            const school = option.dataset.school;
+            
+            document.querySelector('[name="AssessmentForm[student_id]"]').value = studentId;
+            document.getElementById('student-name').value = name;
+            document.getElementById('student-reg').value = reg;
+            document.getElementById('student-school').value = school;
+            document.getElementById('student-input').value = reg + ' - ' + name;
+        } else {
+            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-reg').value = '';
+            document.getElementById('student-school').value = '';
+            document.getElementById('student-input').value = '';
+        }
+    });
+    
+    // Handle TYPE input
     document.getElementById('student-input').addEventListener('input', function(e) {
         var val = e.target.value;
         var matched = false;
@@ -141,14 +190,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 document.getElementById('student-name').value = '<?= addslashes($student->full_name) ?>';
                 document.getElementById('student-reg').value = '<?= addslashes($student->registration_number) ?>';
                 document.getElementById('student-school').value = '<?= addslashes($student->school ?? 'N/A') ?>';
+                document.getElementById('student-select').value = '<?= $student->id ?>';
                 matched = true;
             }
         <?php endforeach; ?>
         if (!matched) {
             document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-            document.getElementById('student-name').value = '';
-            document.getElementById('student-reg').value = '';
-            document.getElementById('student-school').value = '';
+            document.getElementById('student-select').value = '';
         }
     });
     </script>

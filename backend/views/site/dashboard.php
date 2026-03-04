@@ -20,12 +20,12 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
   }
 
   .dashboard-header {
-    background: linear-gradient(135deg, #2C5282 0%, #3B82F6 100%);
+    background: linear-gradient(135deg, #2874A6 0%, #3498DB 100%);
     color: white;
     padding: 50px 30px;
     margin: 0 -30px 30px -30px;
     border-radius: 0;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 12px rgba(52, 152, 219, 0.15);
   }
   
   .dashboard-header h1 {
@@ -52,35 +52,35 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     border-radius: 12px;
     padding: 30px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(52, 152, 219, 0.08);
     border-left: 5px solid #3498DB;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-top: none;
   }
   
   .stat-card:hover {
-    box-shadow: 0 8px 24px rgba(52, 152, 219, 0.12);
+    box-shadow: 0 8px 24px rgba(52, 152, 219, 0.15);
     transform: translateY(-3px);
   }
   
   .stat-card.total {
-    border-left-color: #3B82F6;
+    border-left-color: #3498DB;
   }
   
   .stat-card.draft {
-    border-left-color: #F59E0B;
+    border-left-color: #5DADE2;
   }
   
   .stat-card.submitted {
-    border-left-color: #8B5CF6;
+    border-left-color: #2874A6;
   }
   
   .stat-card.validated {
-    border-left-color: #10B981;
+    border-left-color: #1ABC9C;
   }
 
   .stat-card h5 {
-    color: #6B7280;
+    color: #2C3E50;
     font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -91,13 +91,13 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
   .stat-card .stat-number {
     font-size: 2.8rem;
     font-weight: 700;
-    color: #1F2937;
+    color: #2874A6;
     margin-bottom: 5px;
   }
   
   .stat-card .stat-description {
     font-size: 0.9rem;
-    color: #9CA3AF;
+    color: #7F8C8D;
     margin-top: 5px;
   }
   
@@ -106,11 +106,11 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     border-radius: 12px;
     padding: 30px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(52, 152, 219, 0.08);
   }
   
   .section-card h4 {
-    color: #1F2937;
+    color: #2874A6;
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 25px 0;
@@ -119,17 +119,17 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
   }
   
   .notification-box {
-    background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
+    background: linear-gradient(135deg, #EBF5FB 0%, #D6EAF8 100%);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 15px;
-    border-left: 4px solid #3B82F6;
+    border-left: 4px solid #3498DB;
     border-radius: 8px;
   }
   
   .notification-box.unread {
-    border-left-color: #EF4444;
-    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
+    border-left-color: #E74C3C;
+    background: linear-gradient(135deg, #FEF5E7 0%, #FCF3CF 100%);
   }
   
   .quick-action-btn {
@@ -147,35 +147,35 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
   }
   
   .quick-action-btn.primary {
-    background-color: #3B82F6;
+    background-color: #3498DB;
     color: white;
   }
   
   .quick-action-btn.primary:hover {
-    background-color: #2563EB;
+    background-color: #2874A6;
   }
   
   .quick-action-btn.secondary {
-    background-color: #F3F4F6;
-    color: #1F2937;
-    border: 1px solid #E5E7EB;
+    background-color: #ECF0F1;
+    color: #2C3E50;
+    border: 1px solid #D5DBDB;
   }
   
   .quick-action-btn.secondary:hover {
-    background-color: #E5E7EB;
+    background-color: #D5DBDB;
   }
   
   .features-box {
     background: white;
     border-radius: 12px;
     padding: 30px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(52, 152, 219, 0.08);
     margin: 30px 0 0 0;
-    border-left: 5px solid #3B82F6;
+    border-left: 5px solid #3498DB;
   }
   
   .features-box h4 {
-    color: #1F2937;
+    color: #2874A6;
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 20px 0;
@@ -189,8 +189,8 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
   
   .features-box li {
     padding: 12px 0 12px 30px;
-    color: #374151;
-    border-bottom: 1px solid #E5E7EB;
+    color: #34495E;
+    border-bottom: 1px solid #ECF0F1;
     position: relative;
     font-size: 0.95rem;
     line-height: 1.5;
@@ -204,7 +204,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     content: "✓";
     position: absolute;
     left: 0;
-    color: #10B981;
+    color: #27AE60;
     font-weight: bold;
     font-size: 1rem;
   }

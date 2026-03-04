@@ -36,12 +36,12 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => '🏠 Dashboard', 'url' => ['/site/index']],
+        ['label' => 'Dashboard', 'url' => ['/site/index']],
     ];
     if (!Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '📋 Assessments', 'url' => ['/assessment/index']];
-        $menuItems[] = ['label' => '📊 Reports', 'url' => ['/report/index']];
-        $menuItems[] = ['label' => '🔔 Notifications', 'url' => ['/notification/index']];
+        $menuItems[] = ['label' => 'Assessments', 'url' => ['/assessment/index']];
+        $menuItems[] = ['label' => 'Reports', 'url' => ['/report/index']];
+        $menuItems[] = ['label' => 'Notifications', 'url' => ['/notification/index']];
     }
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
@@ -55,7 +55,7 @@ AppAsset::register($this);
     } else {
         echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
             . Html::submitButton(
-                '👤 ' . Yii::$app->user->identity->username . ' (Logout)',
+                Yii::$app->user->identity->username . ' (Logout)',
                 ['class' => 'btn btn-light logout text-decoration-none fw-bold']
             )
             . Html::endForm();
@@ -64,14 +64,14 @@ AppAsset::register($this);
     ?>
 </header>
 
-<main role="main" class="flex-shrink-0" style="margin-top: 65px; padding: 0 0; background-color: #F8F9FA;">
+<main role="main" class="flex-shrink-0" style="margin-top: 65px; padding: 0 0; background-color: #F0F7FF;">
     <div class="container">
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
 </main>
 
-<footer class="footer mt-auto py-4" style="background-color: #2C3E50; color: white; margin-top: 40px;">
+<footer class="footer mt-auto py-4" style="background-color: #2874A6; color: white; margin-top: 40px;">
     <div class="container">
         <p class="float-start mb-0" style="font-size: 0.9rem;">
             &copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?> | University of Nairobi Faculty of Education

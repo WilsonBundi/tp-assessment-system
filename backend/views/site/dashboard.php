@@ -15,171 +15,185 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 ?>
 
 <style>
+  .dashboard {
+    padding: 0;
+  }
+
   .dashboard-header {
-    background: linear-gradient(135deg, #3498DB 0%, #5DADE2 100%);
+    background: linear-gradient(135deg, #2C5282 0%, #3B82F6 100%);
     color: white;
-    padding: 40px 0;
-    margin: 0 -30px 0 -30px;
+    padding: 50px 30px;
+    margin: 0 -30px 30px -30px;
     border-radius: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
   
   .dashboard-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2.2rem;
+    font-weight: 800;
     margin: 0;
+    letter-spacing: -0.5px;
   }
   
   .dashboard-header p {
-    font-size: 1.1rem;
-    opacity: 0.95;
-    margin-top: 10px;
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 8px;
+    font-weight: 300;
   }
-  
+
+  /* Stats Row Styling */
+  .row {
+    margin-bottom: 30px;
+  }
+
   .stat-card {
     background: white;
-    border-radius: 8px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border-top: 4px solid #3498DB;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    border-left: 5px solid #3498DB;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-top: none;
   }
   
   .stat-card:hover {
-    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.2);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(52, 152, 219, 0.12);
+    transform: translateY(-3px);
   }
   
   .stat-card.total {
-    border-top-color: #3498DB;
+    border-left-color: #3B82F6;
   }
   
   .stat-card.draft {
-    border-top-color: #F39C12;
+    border-left-color: #F59E0B;
   }
   
   .stat-card.submitted {
-    border-top-color: #2980B9;
+    border-left-color: #8B5CF6;
   }
   
   .stat-card.validated {
-    border-top-color: #27AE60;
+    border-left-color: #10B981;
   }
-  
-  .stat-card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-  }
-  
+
   .stat-card h5 {
-    color: #666;
-    font-size: 0.9rem;
-    font-weight: 600;
+    color: #6B7280;
+    font-size: 0.85rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0 0 10px 0;
+    letter-spacing: 0.8px;
+    margin: 0 0 15px 0;
   }
   
   .stat-card .stat-number {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     font-weight: 700;
-    color: #2C3E50;
+    color: #1F2937;
+    margin-bottom: 5px;
   }
   
   .stat-card .stat-description {
-    font-size: 0.85rem;
-    color: #999;
-    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #9CA3AF;
+    margin-top: 5px;
   }
   
   .section-card {
     background: white;
-    border-radius: 8px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   }
   
   .section-card h4 {
-    color: #2C3E50;
-    font-size: 1.3rem;
+    color: #1F2937;
+    font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #3498DB;
+    margin: 0 0 25px 0;
+    padding-bottom: 0;
+    border-bottom: none;
   }
   
   .notification-box {
-    background: linear-gradient(135deg, #E8F4F8 0%, #F0F8FF 100%);
-    border-radius: 8px;
+    background: linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%);
+    border-radius: 10px;
     padding: 20px;
     margin-bottom: 15px;
-    border-left: 4px solid #3498DB;
+    border-left: 4px solid #3B82F6;
+    border-radius: 8px;
   }
   
   .notification-box.unread {
-    border-left-color: #E74C3C;
+    border-left-color: #EF4444;
+    background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
   }
   
   .quick-action-btn {
     display: block;
     width: 100%;
-    padding: 15px;
-    margin-bottom: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-weight: 600;
+    font-size: 0.95rem;
     text-align: left;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
   
   .quick-action-btn.primary {
-    background-color: #3498DB;
+    background-color: #3B82F6;
     color: white;
   }
   
   .quick-action-btn.primary:hover {
-    background-color: #2980B9;
-    transform: translateX(5px);
+    background-color: #2563EB;
   }
   
   .quick-action-btn.secondary {
-    background-color: #ECF0F1;
-    color: #2C3E50;
+    background-color: #F3F4F6;
+    color: #1F2937;
+    border: 1px solid #E5E7EB;
   }
   
   .quick-action-btn.secondary:hover {
-    background-color: #BDC3C7;
-    transform: translateX(5px);
+    background-color: #E5E7EB;
   }
   
   .features-box {
-    background: linear-gradient(135deg, #F0F8FF 0%, #E8F4F8 100%);
-    border-radius: 8px;
+    background: white;
+    border-radius: 12px;
     padding: 30px;
-    border-left: 5px solid #3498DB;
-    margin-top: 30px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    margin: 30px 0 0 0;
+    border-left: 5px solid #3B82F6;
   }
   
   .features-box h4 {
-    color: #2874A6;
-    font-size: 1.3rem;
+    color: #1F2937;
+    font-size: 1.25rem;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
   }
   
   .features-box ul {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
   
   .features-box li {
-    padding: 12px 0;
-    color: #34495E;
-    border-bottom: 1px solid rgba(52, 73, 94, 0.1);
-    padding-left: 30px;
+    padding: 12px 0 12px 30px;
+    color: #374151;
+    border-bottom: 1px solid #E5E7EB;
     position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
   
   .features-box li:last-child {
@@ -187,16 +201,12 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
   }
   
   .features-box li:before {
-    content: "\2713";
+    content: "✓";
     position: absolute;
     left: 0;
-    color: #27AE60;
+    color: #10B981;
     font-weight: bold;
-    font-size: 1.1rem;
-  }
-  
-  .dashboard {
-    padding: 20px 30px 0 30px;
+    font-size: 1rem;
   }
 </style>
 
@@ -210,7 +220,6 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     <div class="row">
         <div class="col-md-3">
             <div class="stat-card total">
-                <div class="stat-card-icon"></div>
                 <h5>Total Assessments</h5>
                 <div class="stat-number"><?= $totalAssessments ?></div>
                 <div class="stat-description">All assessments in system</div>
@@ -219,7 +228,6 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-3">
             <div class="stat-card draft">
-                <div class="stat-card-icon"></div>
                 <h5>Draft Assessments</h5>
                 <div class="stat-number"><?= $draftAssessments ?></div>
                 <div class="stat-description">Awaiting completion</div>
@@ -231,7 +239,6 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-3">
             <div class="stat-card submitted">
-                <div class="stat-card-icon"></div>
                 <h5>Submitted Assessments</h5>
                 <div class="stat-number"><?= $submittedAssessments ?></div>
                 <div class="stat-description">Pending validation</div>
@@ -240,7 +247,6 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-3">
             <div class="stat-card validated">
-                <div class="stat-card-icon"></div>
                 <h5>Validated Assessments</h5>
                 <div class="stat-number"><?= $validatedAssessments ?></div>
                 <div class="stat-description">Completed assessments</div>
@@ -262,7 +268,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
                     </div>
                 <?php else: ?>
                     <div class="notification-box">
-                        <p style="margin: 0; color: #27AE60; font-weight: 600;">✓ All notifications read. You're all caught up!</p>
+                        <p style="margin: 0; color: #27AE60; font-weight: 600;">All notifications read. You're all caught up!</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -281,7 +287,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
     <!-- Features Section -->
     <div class="features-box">
-        <h4>✨ TP Assessment System Features</h4>
+        <h4>TP Assessment System Features</h4>
         <ul>
             <li>Digital assessment entry with 12 competence areas</li>
             <li>Automatic score calculation and performance level determination</li>

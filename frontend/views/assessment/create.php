@@ -41,8 +41,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: 600; color: #333;">REGISTRATION NUMBER / SEARCH:</label><br>
                             <div style="position: relative; margin-top: 8px;">
-                                <input type="text" class="form-control" id="student-input" name="AssessmentForm[student_input]" list="student-list" placeholder="Type registration number or student name, or use search 🔍" required style="padding-right: 45px; font-size: 1rem;">
-                                <button type="button" id="search-btn-inline" class="btn" style="position: absolute; right: 2px; top: 50%; transform: translateY(-50%); background-color: #3498DB; color: white; font-weight: 600; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">🔍</button>
+                                <input type="text" class="form-control" id="student-input" name="AssessmentForm[student_input]" list="student-list" placeholder="Type registration number or student name, or use search" required style="padding-right: 45px; font-size: 1rem;">
+                                <button type="button" id="search-btn-inline" class="btn" style="position: absolute; right: 2px; top: 50%; transform: translateY(-50%); background-color: #3498DB; color: white; font-weight: 600; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">Search</button>
                                 <datalist id="student-list">
                                     <?php foreach ($students as $student): ?>
                                         <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>

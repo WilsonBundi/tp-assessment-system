@@ -112,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 
 <div class="assessment-index">
-    <h1>📋 <?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="create-btn-container">
         <?= Html::a('✨ Create New Assessment', ['create'], ['class' => 'btn btn-success']) ?>
@@ -180,7 +180,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'update' => function($url, $model) {
                         if ($model->status === 'draft' || $model->status === 'submitted') {
-                            return Html::a('✏️ Edit', ['edit', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']);
+                            return Html::a('Edit', ['edit', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']);
                         }
                         return '';
                     },

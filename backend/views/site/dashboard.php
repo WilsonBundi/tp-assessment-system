@@ -199,7 +199,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
 <div class="dashboard">
     <div class="dashboard-header">
-        <h1>📊 TP Assessment Dashboard</h1>
+        <h1>TP Assessment Dashboard</h1>
         <p>Monitor and manage teaching practice assessments in real-time</p>
     </div>
 
@@ -207,7 +207,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     <div class="row">
         <div class="col-md-3">
             <div class="stat-card total">
-                <div class="stat-card-icon">📋</div>
+                <div class="stat-card-icon"></div>
                 <h5>Total Assessments</h5>
                 <div class="stat-number"><?= $totalAssessments ?></div>
                 <div class="stat-description">All assessments in system</div>
@@ -216,7 +216,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-3">
             <div class="stat-card draft">
-                <div class="stat-card-icon">✏️</div>
+                <div class="stat-card-icon"></div>
                 <h5>Draft Assessments</h5>
                 <div class="stat-number"><?= $draftAssessments ?></div>
                 <div class="stat-description">Awaiting completion</div>
@@ -228,7 +228,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-3">
             <div class="stat-card submitted">
-                <div class="stat-card-icon">📤</div>
+                <div class="stat-card-icon"></div>
                 <h5>Submitted Assessments</h5>
                 <div class="stat-number"><?= $submittedAssessments ?></div>
                 <div class="stat-description">Pending validation</div>
@@ -237,7 +237,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-3">
             <div class="stat-card validated">
-                <div class="stat-card-icon">✅</div>
+                <div class="stat-card-icon"></div>
                 <h5>Validated Assessments</h5>
                 <div class="stat-number"><?= $validatedAssessments ?></div>
                 <div class="stat-description">Completed assessments</div>
@@ -249,7 +249,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
     <div class="row">
         <div class="col-md-6">
             <div class="section-card">
-                <h4>🔔 Notifications</h4>
+                <h4>Notifications</h4>
                 <?php if ($unreadNotifications > 0): ?>
                     <div class="notification-box unread">
                         <p style="margin: 0; font-weight: 600;">
@@ -267,7 +267,7 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
 
         <div class="col-md-6">
             <div class="section-card">
-                <h4>⚡ Quick Actions</h4>
+                <h4>Quick Actions</h4>
                 <a href="<?= \yii\helpers\Url::to(['assessment/create']) ?>" class="quick-action-btn primary">+ Create New Assessment</a>
                 <a href="<?= \yii\helpers\Url::to(['assessment/index']) ?>" class="quick-action-btn secondary">View All Assessments</a>
                 <a href="<?= \yii\helpers\Url::to(['report/index']) ?>" class="quick-action-btn secondary">Generate Reports</a>

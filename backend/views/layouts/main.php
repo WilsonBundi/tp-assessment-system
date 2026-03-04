@@ -64,7 +64,7 @@ AppAsset::register($this);
     ?>
 </header>
 
-<main role="main" class="flex-shrink-0" style="margin-top: 70px; padding: 40px 0; background-color: #F8F9FA;">
+<main role="main" class="flex-shrink-0" style="margin-top: 90px; padding: 40px 0; background-color: #F8F9FA;">
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],

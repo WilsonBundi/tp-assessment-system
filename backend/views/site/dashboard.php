@@ -268,10 +268,10 @@ $unreadNotifications = TpNotification::find()->where(['user_id' => \Yii::$app->u
         <div class="col-md-6">
             <div class="section-card">
                 <h4>⚡ Quick Actions</h4>
-                <a href="<?= Html::encode(['assessment/create']) ?>" class="quick-action-btn primary">+ Create New Assessment</a>
-                <a href="<?= Html::encode(['assessment/index']) ?>" class="quick-action-btn secondary">View All Assessments</a>
-                <a href="<?= Html::encode(['report/index']) ?>" class="quick-action-btn secondary">Generate Reports</a>
-                <a href="<?= Html::encode(['notification/index']) ?>" class="quick-action-btn secondary">Manage Notifications</a>
+                <a href="<?= \yii\helpers\Url::to(['assessment/create']) ?>" class="quick-action-btn primary">+ Create New Assessment</a>
+                <a href="<?= \yii\helpers\Url::to(['assessment/index']) ?>" class="quick-action-btn secondary">View All Assessments</a>
+                <a href="<?= \yii\helpers\Url::to(['report/index']) ?>" class="quick-action-btn secondary">Generate Reports</a>
+                <a href="<?= \yii\helpers\Url::to(['notification/index']) ?>" class="quick-action-btn secondary">Manage Notifications</a>
             </div>
         </div>
     </div>

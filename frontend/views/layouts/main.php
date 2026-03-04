@@ -25,6 +25,18 @@ AppAsset::register($this);
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
 
+<style>
+    /* stack breadcrumb links vertically and add breathing room */
+    .breadcrumb {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+    .breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+        content: none;
+    }
+</style>
+
 <header>
     <?php
     NavBar::begin([

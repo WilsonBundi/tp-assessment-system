@@ -90,8 +90,13 @@ AppAsset::register($this);
                 font-weight: 600;
             }
         </style>
+        <?php
+            $breadcrumbLinks = isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [];
+            $finalLinks = [['label' => 'Home', 'url' => ['/site/index']]];
+            $finalLinks = array_merge($finalLinks, $breadcrumbLinks);
+        ?>
         <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            'links' => $finalLinks,
         ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>

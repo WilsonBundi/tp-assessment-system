@@ -17,15 +17,40 @@ $this->params['breadcrumbs'][] = $this->title;
 
         <div class="row">
             <div class="col-md-6">
-                <?= $form->field($model, 'student_id')->dropDownList(
-                    \yii\helpers\ArrayHelper::map($students, 'id', function($student) {
-                        return $student->registration_number . ' - ' . $student->full_name;
-                    }),
-                    ['prompt' => 'Select Student']
-                ) ?>
+                <?php
+                    // build datalist string
+                    $listId = 'student-list';
+                ?>
+                <?= Html::textInput('AssessmentForm[student_input]', $model->student_input, ['class' => 'form-control', 'list' => $listId, 'placeholder' => 'Type registration number or name']) ?>
+                <datalist id="<?= $listId ?>">
+                    <?php foreach ($students as $student): ?>
+                        <option value="<?= Html::encode($student->registration_number . ' - ' . $student->full_name) ?>"></option>
+                    <?php endforeach; ?>
+                </datalist>
+                <?= Html::activeHiddenInput($model, 'student_id') ?>
+                <script>
+                document.querySelector('[name="AssessmentForm[student_input]"]').addEventListener('input', function(e) {
+                    // when user selects from datalist, find matching id
+                    var val = e.target.value;
+                    var matched = false;
+                    <?php foreach ($students as $student): ?>
+                        if (val === '<?= addslashes($student->registration_number . ' - ' . $student->full_name) ?>') {
+                            document.querySelector('[name="AssessmentForm[student_id]"]').value = '<?= $student->id ?>';
+                            matched = true;
+                        }
+                    <?php endforeach; ?>
+                    if (!matched) {
+                        document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+                    }
+                });
+                </script>
             </div>
             <div class="col-md-6">
-                <?= $form->field($model, 'assessment_date')->input('date') ?>
+                <?= $form->field($model, 'assessment_date')->textInput([
+                    'placeholder' => 'dd/mm/yyyy',
+                    'class' => 'form-control date-mask',
+                    'style' => 'margin-top: 8px;'
+                ])->label(false) ?>
             </div>
         </div>
 
@@ -104,3 +129,13 @@ $this->params['breadcrumbs'][] = $this->title;
     border-left: 4px solid #0066cc;
 }
 </style>
+
+<?php
+// apply input mask if plugin is available (loaded by asset or CDN)
+$script = <<<JS
+if (window.jQuery && $.fn.inputmask) {
+    $('.date-mask').inputmask('99/99/9999');
+}
+JS;
+$this->registerJs($script);
+?>

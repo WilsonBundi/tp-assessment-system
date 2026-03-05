@@ -27,7 +27,11 @@ $this->params['breadcrumbs'][] = 'Edit';
                 </div>
             </div>
             <div class="col-md-6">
-                <?= $form->field($model, 'assessment_date')->input('date') ?>
+                <?= $form->field($model, 'assessment_date')->textInput([
+                    'placeholder' => 'dd/mm/yyyy',
+                    'class' => 'form-control date-mask',
+                    'style' => 'margin-top: 8px;'
+                ])->label(false) ?>
             </div>
         </div>
 
@@ -93,3 +97,12 @@ $this->params['breadcrumbs'][] = 'Edit';
     font-size: 18px;
 }
 </style>
+
+<?php
+$script = <<<JS
+if (window.jQuery && $.fn.inputmask) {
+    $('.date-mask').inputmask('99/99/9999');
+}
+JS;
+$this->registerJs($script);
+?>

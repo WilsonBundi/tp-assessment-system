@@ -53,9 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
     }
     
     .grid-view th {
-        background-color: #E8F4F8;
-        border-top: 2px solid #3498DB;
-        color: #2C3E50;
+        background-color: #3498DB;
+        color: white;
+        border-top: 2px solid #2980B9;
         font-weight: 600;
         padding: 15px !important;
     }
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
     }
     
     .grid-view tbody tr:hover {
-        background-color: #F8F9FA;
+        background-color: #E8F4F8;
     }
     
     .status-badge {

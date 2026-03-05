@@ -26,7 +26,7 @@ class NotificationController extends Controller
                     [
                         'actions' => ['index', 'view', 'mark-read', 'delete'],
                         'allow' => true,
-                        'roles' => ['tp_supervisor', 'tp_coordinator', 'tp_office', 'tp_department_chair'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

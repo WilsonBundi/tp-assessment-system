@@ -29,12 +29,12 @@ class ReportController extends Controller
                     [
                         'actions' => ['index', 'view', 'download'],
                         'allow' => true,
-                        'roles' => ['tp_supervisor', 'tp_coordinator', 'tp_office', 'tp_department_chair'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['generate'],
                         'allow' => true,
-                        'roles' => ['tp_office', 'tp_department_chair'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

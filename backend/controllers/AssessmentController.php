@@ -32,17 +32,17 @@ class AssessmentController extends Controller
                     [
                         'actions' => ['index', 'view', 'edit', 'submit', 'my-assessments'],
                         'allow' => true,
-                        'roles' => ['tp_supervisor', 'tp_coordinator', 'tp_office', 'tp_department_chair'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['tp_supervisor'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['review', 'validate', 'reject'],
                         'allow' => true,
-                        'roles' => ['tp_coordinator', 'tp_department_chair'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

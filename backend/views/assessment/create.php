@@ -159,176 +159,178 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= Html::activeHiddenInput($model, 'student_id') ?>
 
     <script>
-        // Bind students data
-        const students = [
-            <?php foreach ($students as $student): ?>
-                {
-                    id: '<?= $student->id ?>',
-                    name: '<?= addslashes($student->full_name) ?>',
-                    reg: '<?= addslashes($student->registration_number) ?>',
-                    school: '<?= addslashes($student->school ?? 'N/A') ?>'
-                },
-            <?php endforeach; ?>
-        ];
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bind students data
+            const students = [
+                <?php foreach ($students as $student): ?>
+                    {
+                        id: '<?= $student->id ?>',
+                        name: '<?= addslashes($student->full_name) ?>',
+                        reg: '<?= addslashes($student->registration_number) ?>',
+                        school: '<?= addslashes($student->school ?? 'N/A') ?>'
+                    },
+                <?php endforeach; ?>
+            ];
     
-        // Auto-populate student fields when typing or selecting
-        function autoPopulateStudent(id) {
-            const student = students.find(s => s.id == id);
-            if (student) {
-                document.getElementById('student-name').value = student.name;
-                document.getElementById('student-reg').value = student.reg;
-                document.getElementById('student-school').value = student.school;
-                document.querySelector('[name="AssessmentForm[student_id]"]').value = id;
-                document.getElementById('student-input').value = student.reg + ' - ' + student.name;
-            }
-        }
-    
-        // Handle TYPE input (datalist autocomplete)
-        document.getElementById('student-input').addEventListener('input', function(e) {
-            const val = e.target.value.trim();
-            let matched = false;
-        
-            for (let student of students) {
-                if (val === (student.reg + ' - ' + student.name)) {
-                    autoPopulateStudent(student.id);
-                    matched = true;
-                    break;
+            // Auto-populate student fields when typing or selecting
+            function autoPopulateStudent(id) {
+                const student = students.find(s => s.id == id);
+                if (student) {
+                    document.getElementById('student-name').value = student.name;
+                    document.getElementById('student-reg').value = student.reg;
+                    document.getElementById('student-school').value = student.school;
+                    document.querySelector('[name="AssessmentForm[student_id]"]').value = id;
+                    document.getElementById('student-input').value = student.reg + ' - ' + student.name;
                 }
             }
+    
+            // Handle TYPE input (datalist autocomplete)
+            document.getElementById('student-input').addEventListener('input', function(e) {
+                const val = e.target.value.trim();
+                let matched = false;
         
-            if (!matched) {
-                document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-            }
-        });
-
-        // Handle NAME input: exact match to student name will populate
-        document.getElementById('student-name').addEventListener('input', function(e) {
-            const val = e.target.value.trim();
-            for (let student of students) {
-                if (val === student.name) {
-                    autoPopulateStudent(student.id);
-                    return;
+                for (let student of students) {
+                    if (val === (student.reg + ' - ' + student.name)) {
+                        autoPopulateStudent(student.id);
+                        matched = true;
+                        break;
+                    }
                 }
-            }
-            // no exact match
-            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-        });
-
-        // Handle REG input: exact match to reg or reg - name will populate
-        document.getElementById('student-reg').addEventListener('input', function(e) {
-            const val = e.target.value.trim();
-            for (let student of students) {
-                if (val === student.reg || val === (student.reg + ' - ' + student.name)) {
-                    autoPopulateStudent(student.id);
-                    return;
+        
+                if (!matched) {
+                    document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
                 }
-            }
-            document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-        });
-
-        // Handle SCHOOL input: if only one student matches this school, populate
-        document.getElementById('student-school').addEventListener('input', function(e) {
-            const val = e.target.value.trim();
-            const matches = students.filter(s => s.school === val);
-            if (matches.length === 1) {
-                autoPopulateStudent(matches[0].id);
-            } else {
-                // don't set student id when multiple or zero matches
-                document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-            }
-        });
-    
-        // Handle SEARCH button
-        document.getElementById('search-btn-inline').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('search-modal').style.display = 'flex';
-            document.getElementById('search-input').focus();
-            document.getElementById('search-input').value = '';
-            document.getElementById('search-results').innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
-        });
-    
-        document.getElementById('close-search-btn').addEventListener('click', function() {
-            document.getElementById('search-modal').style.display = 'none';
-        });
-    
-        // Handle SEARCH functionality in modal
-        document.getElementById('search-input').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-            const resultsDiv = document.getElementById('search-results');
-        
-            if (query.length === 0) {
-                resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
-                return;
-            }
-        
-            const filtered = students.filter(s => 
-                s.name.toLowerCase().includes(query) || 
-                s.reg.toLowerCase().includes(query)
-            );
-        
-            if (filtered.length === 0) {
-                resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No students found</p>';
-                return;
-            }
-        
-            let html = '';
-            filtered.forEach(student => {
-                html += `<div style="padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; transition: background 0.2s;" class="search-result-item" data-id="${student.id}" data-name="${student.name}" data-reg="${student.reg}" data-school="${student.school}">
-                    <strong style="color: #2874A6;">${student.reg}</strong><br>
-                    <span style="color: #333;">${student.name}</span><br>
-                    <small style="color: #999;">${student.school}</small>
-                </div>`;
             });
-        
-            resultsDiv.innerHTML = html;
-        
-            // Add click handlers to search results
-            document.querySelectorAll('.search-result-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    autoPopulateStudent(id);
-                    document.getElementById('search-modal').style.display = 'none';
-                });
-        
-                item.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#e8f4f8';
-                });
-        
-                item.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = 'transparent';
-                });
+
+            // Handle NAME input: exact match to student name will populate
+            document.getElementById('student-name').addEventListener('input', function(e) {
+                const val = e.target.value.trim();
+                for (let student of students) {
+                    if (val === student.name) {
+                        autoPopulateStudent(student.id);
+                        return;
+                    }
+                }
+                // no exact match
+                document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
             });
-        });
 
-        // Form submit validation: ensure name, registration, school are present
-        document.getElementById('assessment-form').addEventListener('submit', function(e) {
-            const name = document.getElementById('student-name').value.trim();
-            const input = document.getElementById('student-input').value.trim();
-            const school = document.getElementById('student-school').value.trim();
+            // Handle REG input: exact match to reg or reg - name will populate
+            document.getElementById('student-reg').addEventListener('input', function(e) {
+                const val = e.target.value.trim();
+                for (let student of students) {
+                    if (val === student.reg || val === (student.reg + ' - ' + student.name)) {
+                        autoPopulateStudent(student.id);
+                        return;
+                    }
+                }
+                document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+            });
 
-            // Try parse registration from student-input if formatted as "REG - Name"
-            let registration = '';
-            if (input.includes(' - ')) {
-                registration = input.split(' - ')[0].trim();
-            }
-
-            // If student_id is set (existing student), ensure registration taken from students list
-            const studentId = document.querySelector('[name="AssessmentForm[student_id]"]').value;
-            if (studentId) {
-                const s = students.find(s => s.id == studentId);
-                if (s) registration = s.reg;
-            }
-
-            // set hidden registration
-            document.getElementById('assessment-registration').value = registration;
-
-            if (!name || !registration || !school) {
+            // Handle SCHOOL input: if only one student matches this school, populate
+            document.getElementById('student-school').addEventListener('input', function(e) {
+                const val = e.target.value.trim();
+                const matches = students.filter(s => s.school === val);
+                if (matches.length === 1) {
+                    autoPopulateStudent(matches[0].id);
+                } else {
+                    // don't set student id when multiple or zero matches
+                    document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
+                }
+            });
+    
+            // Handle SEARCH button
+            document.getElementById('search-btn-inline').addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Please ensure Student Name, Registration and School are all provided.');
-                return false;
-            }
+                document.getElementById('search-modal').style.display = 'flex';
+                document.getElementById('search-input').focus();
+                document.getElementById('search-input').value = '';
+                document.getElementById('search-results').innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
+            });
+    
+            document.getElementById('close-search-btn').addEventListener('click', function() {
+                document.getElementById('search-modal').style.display = 'none';
+            });
+    
+            // Handle SEARCH functionality in modal
+            document.getElementById('search-input').addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase().trim();
+                const resultsDiv = document.getElementById('search-results');
+        
+                if (query.length === 0) {
+                    resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
+                    return;
+                }
+        
+                const filtered = students.filter(s => 
+                    s.name.toLowerCase().includes(query) || 
+                    s.reg.toLowerCase().includes(query)
+                );
+        
+                if (filtered.length === 0) {
+                    resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No students found</p>';
+                    return;
+                }
+        
+                let html = '';
+                filtered.forEach(student => {
+                    html += `<div style="padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; transition: background 0.2s;" class="search-result-item" data-id="${student.id}" data-name="${student.name}" data-reg="${student.reg}" data-school="${student.school}">
+                        <strong style="color: #2874A6;">${student.reg}</strong><br>
+                        <span style="color: #333;">${student.name}</span><br>
+                        <small style="color: #999;">${student.school}</small>
+                    </div>`;
+                });
+        
+                resultsDiv.innerHTML = html;
+        
+                // Add click handlers to search results
+                document.querySelectorAll('.search-result-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        autoPopulateStudent(id);
+                        document.getElementById('search-modal').style.display = 'none';
+                    });
+        
+                    item.addEventListener('mouseenter', function() {
+                        this.style.backgroundColor = '#e8f4f8';
+                    });
+        
+                    item.addEventListener('mouseleave', function() {
+                        this.style.backgroundColor = 'transparent';
+                    });
+                });
+            });
 
-            return true;
+            // Form submit validation: ensure name, registration, school are present
+            document.getElementById('assessment-form').addEventListener('submit', function(e) {
+                const name = document.getElementById('student-name').value.trim();
+                const input = document.getElementById('student-input').value.trim();
+                const school = document.getElementById('student-school').value.trim();
+
+                // Try parse registration from student-input if formatted as "REG - Name"
+                let registration = '';
+                if (input.includes(' - ')) {
+                    registration = input.split(' - ')[0].trim();
+                }
+
+                // If student_id is set (existing student), ensure registration taken from students list
+                const studentId = document.querySelector('[name="AssessmentForm[student_id]"]').value;
+                if (studentId) {
+                    const s = students.find(s => s.id == studentId);
+                    if (s) registration = s.reg;
+                }
+
+                // set hidden registration
+                document.getElementById('assessment-registration').value = registration;
+
+                if (!name || !registration || !school) {
+                    e.preventDefault();
+                    alert('Please ensure Student Name, Registration and School are all provided.');
+                    return false;
+                }
+
+                return true;
+            });
         });
     </script>
 
@@ -426,110 +428,10 @@ document.querySelectorAll('.score-checkbox').forEach(checkbox => {
             input.value = scoreMap[score];
         } else if (input) {
             input.value = 0;
-                // Bind students data
-                const students = [
-                    <?php foreach ($students as $student): ?>
-                        {
-                            id: '<?= $student->id ?>',
-                            name: '<?= addslashes($student->full_name) ?>',
-                            reg: '<?= addslashes($student->registration_number) ?>',
-                            school: '<?= addslashes($student->school ?? 'N/A') ?>'
-                        },
-                    <?php endforeach; ?>
-                ];
-    
-                // Auto-populate student fields when typing or selecting
-                function autoPopulateStudent(id) {
-                    const student = students.find(s => s.id == id);
-                    if (student) {
-                        document.getElementById('student-name').value = student.name;
-                        document.getElementById('student-reg').value = student.reg;
-                        document.getElementById('student-school').value = student.school;
-                        document.querySelector('[name="AssessmentForm[student_id]"]').value = id;
-                        document.getElementById('student-input').value = student.reg + ' - ' + student.name;
-                    }
-                }
-    
-                // Handle TYPE input (datalist autocomplete)
-                document.getElementById('student-input').addEventListener('input', function(e) {
-                    const val = e.target.value.trim();
-                    let matched = false;
-        
-                    for (let student of students) {
-                        if (val === (student.reg + ' - ' + student.name)) {
-                            autoPopulateStudent(student.id);
-                            matched = true;
-                            break;
-                        }
-                    }
-        
-                    if (!matched) {
-                        document.querySelector('[name="AssessmentForm[student_id]"]').value = '';
-                    }
-                });
-    
-                // Handle SEARCH button
-                document.getElementById('search-btn-inline').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.getElementById('search-modal').style.display = 'flex';
-                    document.getElementById('search-input').focus();
-                    document.getElementById('search-input').value = '';
-                    document.getElementById('search-results').innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
-                });
-    
-                document.getElementById('close-search-btn').addEventListener('click', function() {
-                    document.getElementById('search-modal').style.display = 'none';
-                });
-    
-                // Handle SEARCH functionality in modal
-                document.getElementById('search-input').addEventListener('input', function(e) {
-                    const query = e.target.value.toLowerCase().trim();
-                    const resultsDiv = document.getElementById('search-results');
-        
-                    if (query.length === 0) {
-                        resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Type to search...</p>';
-                        return;
-                    }
-        
-                    const filtered = students.filter(s => 
-                        s.name.toLowerCase().includes(query) || 
-                        s.reg.toLowerCase().includes(query)
-                    );
-        
-                    if (filtered.length === 0) {
-                        resultsDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No students found</p>';
-                        return;
-                    }
-        
-                    let html = '';
-                    filtered.forEach(student => {
-                        html += `<div style="padding: 12px; border-bottom: 1px solid #ddd; cursor: pointer; transition: background 0.2s;" class="search-result-item" data-id="${student.id}" data-name="${student.name}" data-reg="${student.reg}" data-school="${student.school}">
-                            <strong style="color: #2874A6;">${student.reg}</strong><br>
-                            <span style="color: #333;">${student.name}</span><br>
-                            <small style="color: #999;">${student.school}</small>
-                        </div>`;
-                    });
-        
-                    resultsDiv.innerHTML = html;
-        
-                    // Add click handlers to search results
-                    document.querySelectorAll('.search-result-item').forEach(item => {
-                        item.addEventListener('click', function() {
-                            const id = this.dataset.id;
-                            autoPopulateStudent(id);
-                            document.getElementById('search-modal').style.display = 'none';
-                        });
-            
-                        item.addEventListener('mouseenter', function() {
-                            this.style.backgroundColor = '#e8f4f8';
-                        });
-            
-                        item.addEventListener('mouseleave', function() {
-                            this.style.backgroundColor = 'transparent';
-                        });
-                    });
-                });
-                </script>
+        }
+    });
+});
+</script>
 
 <?php
 // apply input mask if plugin is available (loaded by asset or CDN)

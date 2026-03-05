@@ -160,7 +160,11 @@ function getStatusClass($status) {
 
                     <p>
                         <strong>Supervisor:</strong><br/>
-                        <?= $assessment->supervisor->name ?> (<?= $assessment->supervisor->tp_assigned_code ?>)
+                        <?php if ($assessment->supervisor): ?>
+                            <?= Html::encode($assessment->supervisor->name) ?> (<?= Html::encode($assessment->supervisor->tp_assigned_code) ?>)
+                        <?php else: ?>
+                            <em>None assigned</em>
+                        <?php endif; ?>
                     </p>
 
                     <p>

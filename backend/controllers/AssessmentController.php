@@ -150,24 +150,36 @@ class AssessmentController extends Controller
             ];
 
             $supervisor = TpLecturer::findOne(['user_id' => Yii::$app->user->id]);
-            $assessment = $model->saveAssessment($supervisor->id);
+            
+            if (!$supervisor) {
+                Yii::$app->session->setFlash('error', 'Your lecturer profile is not found. Please contact the administration.');
+                return $this->render('edit', [
+                    'model' => $model,
+                    'assessment' => $assessment,
+                    'rubricAreas' => TpRubricArea::find()->orderBy(['sequence' => SORT_ASC])->all(),
+                ]);
+            }
 
-            if ($assessment) {
+            $savedAssessment = $model->saveAssessment($supervisor->id);
+
+            if ($savedAssessment && $savedAssessment->id) {
                 // Log action
                 TpAuditLog::logAction(
                     TpAuditLog::ACTION_UPDATE,
                     'assessment',
-                    $assessment->id,
+                    $savedAssessment->id,
                     "Assessment updated",
                     $oldValues,
                     [
-                        'assessment_date' => $assessment->assessment_date,
-                        'supervisor_remarks' => $assessment->supervisor_remarks,
+                        'assessment_date' => $savedAssessment->assessment_date,
+                        'supervisor_remarks' => $savedAssessment->supervisor_remarks,
                     ]
                 );
 
                 Yii::$app->session->setFlash('success', 'Assessment updated successfully');
-                return $this->redirect(['view', 'id' => $assessment->id]);
+                return $this->redirect(['view', 'id' => $savedAssessment->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Failed to update assessment. Please check for errors and try again.');
             }
         }
 

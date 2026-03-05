@@ -84,7 +84,7 @@ function getStatusClass($status) {
                                     <td><strong><?= $score->rubricArea->area_name ?></strong></td>
                                     <td><?= $score->score ?>/10</td>
                                     <td>
-                                        <span class="label label-<?= $this->getAttainmentClass($score->attainment_level) ?>">
+                                        <span class="label label-<?= getAttainmentClass($score->attainment_level) ?>">
                                             <?= TpRubricArea::getAttainmentLevelLabel($score->attainment_level) ?>
                                         </span>
                                     </td>
@@ -97,7 +97,7 @@ function getStatusClass($status) {
                     <div style="background: #f9f9f9; padding: 15px; margin-top: 15px; border-radius: 5px;">
                         <strong>Total Score:</strong> <?= $assessment->total_score ?>/120<br/>
                         <strong>Overall Performance:</strong> 
-                        <span class="label label-<?= $this->getPerformanceClass($assessment->overall_performance) ?>" style="font-size: 14px;">
+                        <span class="label label-<?= getPerformanceClass($assessment->overall_performance) ?>" style="font-size: 14px;">
                             <?= TpAssessment::getPerformanceLabel($assessment->overall_performance) ?>
                         </span>
                     </div>
@@ -148,7 +148,7 @@ function getStatusClass($status) {
                 <div class="panel-body">
                     <p>
                         <strong>Status:</strong><br/>
-                        <span class="label label-<?= $this->getStatusClass($assessment->status) ?>" style="font-size: 14px;">
+                        <span class="label label-<?= getStatusClass($assessment->status) ?>" style="font-size: 14px;">
                             <?= TpAssessment::getStatusLabel($assessment->status) ?>
                         </span>
                     </p>

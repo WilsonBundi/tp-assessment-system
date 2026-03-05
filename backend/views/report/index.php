@@ -20,12 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'id',
                 'label' => 'Report ID',
-                'width' => '80px',
+                'headerOptions' => ['style' => 'width: 80px;'],
             ],
             [
                 'attribute' => 'assessment_id',
                 'label' => 'Assessment ID',
-                'width' => '100px',
+                'headerOptions' => ['style' => 'width: 100px;'],
             ],
             [
                 'attribute' => 'report_type',
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     return $model->getReportTypeLabel($model->report_type);
                 },
-                'width' => '120px',
+                'headerOptions' => ['style' => 'width: 120px;'],
             ],
             [
                 'attribute' => 'report_file',
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'generated_at',
                 'label' => 'Generated',
                 'format' => 'dateTime',
-                'width' => '150px',
+                'headerOptions' => ['style' => 'width: 150px;'],
             ],
             [
                 'attribute' => 'downloaded_at',
@@ -51,11 +51,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     return $model->downloaded_at ? Yii::$app->formatter->asDateTime($model->downloaded_at) : '-';
                 },
-                'width' => '150px',
+                'headerOptions' => ['style' => 'width: 150px;'],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'width' => '200px',
+                'headerOptions' => ['style' => 'width: 200px;'],
                 'buttons' => [
                     'view' => function($url, $model) {
                         return Html::a('View', ['view', 'id' => $model->id], ['class' => 'btn btn-sm btn-info']);
